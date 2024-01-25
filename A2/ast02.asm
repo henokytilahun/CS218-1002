@@ -9,7 +9,7 @@
 ;  Static Data Declarations (initialized)
 
 section	.data
-
+ 
 ; -----
 ;  Define standard constants.
 

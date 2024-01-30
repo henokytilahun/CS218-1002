@@ -1,8 +1,8 @@
-;  Name: 
-;  NSHE_ID: 
-;  Section: 
+;  Name: Henok Tilahun
+;  NSHE_ID: 5007740928
+;  Section: 1002
 ;  Assignment:  3
-;  Description: 
+;  Description: Performing very complex arithmetic operations
 
 
 ;  Focus on learning basic arithmetic operations

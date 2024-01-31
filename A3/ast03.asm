@@ -170,30 +170,29 @@ _start:
 
 ; unsigned byte additions
 ;	bAns1  = bNum2 + bNum3
-	mov al, byte [bNum2]
-	mov bl, byte [bNum3]
+	mov al, bNum2
+	mov bl, bNum3
 	add al, bl
-	mov byte [bAns1], al
+	mov bAns1, al
 ;	bAns2  = bNum1 + bNum3
-	mov al, byte [bNum1]
-	add al, byte [bNum3]
-	mov byte [bAns2], al
-
+	mov al, bNum1
+	add al, bNum3
+	mov bAns2, al
 ;	bAns3  = bNum4 + bNum3
-	mov al, byte [bNum4]
-	add al, byte [bNum3]
-	mov byte [bAns3], al
+	mov al, bNum4
+	add al, bNum3
+	mov bAns3, al
 
 ; -----
 ; signed byte additions
 ;	bAns4  = bNum5 + bNum7
-	mov al, byte [bNum5]
-	add al, byte [bNum7]
-	mov byte [bAns4], al
+	mov al, bNum5
+	add al, bNum7
+	mov bAns4, al
 ;	bAns5  = bNum6 + bNum8
-	mov al, byte [bNum6]
-	add al, byte [bNum8]
-	mov byte [bAns5], al
+	mov al, bNum6
+	add al, bNum8
+	mov bAns5, al
 
 ; -----
 ; unsigned byte subtractions

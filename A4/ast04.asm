@@ -18,7 +18,7 @@ minimum dd 0
 median dd 0
 ans dd 0
 DIVEVEN dd 2
-DIV12       dd	12			; divisor for 12
+DIV4       dd	4			; divisor for 12
 
 NULL		equ	0			; end of string
 
@@ -44,49 +44,49 @@ list		dd	 2140, -2376,  2540, -2240,  2677, -2635,  2426,  2000
 		dd	-2475,  2034, -2223,  2883, -2172,  2350, -2415,  2335
 		dd	 2124, -2118,  2713,  2025
 length		dd	100
-
+; -----
 listMin		dd	0
 listEstMed	dd	0
 listMax		dd	0
 listSum		dd	0
 listAve		dd	0
-
+; -----
 negCnt		dd	-1
 negSum		dd	0
 negAve		dd	0
-
+; -----
 twelveCnt	dd	-1
 twelveSum	dd	0
 twelveAve	dd	0
-
-
+; -----
+; -----
 ; ----------------------------------------------
 ;  Uninitialized Static Data Declarations.
-
+; -----
 section	.bss
-
+; -----
 ;	Place data declarations for uninitialized data here...
 ;	(i.e., large arrays that are not initialized)
-
-
+; -----
+; -----
 ; *****************************************************************
-
+; -----
 section	.text
 global _start
 _start:
-
-
+; -----
+; -----
 ; -----
 ;	YOUR CODE GOES HERE...
 ; FIND MIN
 mov rbx, list
 mov rcx, 0
 mov eax, dword[rbx]
-
+; -----
 changeLess:
     mov dword [listMin], eax
     jmp minloop
-
+; -----
 minloop:
     mov eax, dword [rbx + rcx*4]
     inc rcx
@@ -94,46 +94,71 @@ minloop:
     jle changeLess
     cmp ecx, dword [length]
     jne minloop
-
+; -----
 ; FIND Median
-
+; -----
 mov eax, dword[length]
 mov edx, 0
 div dword [DIVEVEN]
 mov dword [median], eax
-
+; -----
 mov ecx, dword [median]
+; -----
+mov rbx, list
+; -----
 medLoop1:
     mov eax, dword[rbx]
     add rbx, 4
     dec ecx
     cmp ecx, 0
     jne medLoop1
-
+add dword [listEstMed], eax
+; -----
+add dword [median], 1
+; -----
+; -----
 mov rbx, list
 mov ecx, dword [median]
-inc ecx
-inc ecx
 medLoop2:
-    mov edx, dword[rbx]
+    mov eax, dword[rbx]
     add rbx, 4
     dec ecx
-    cmp ecx, 1
+    cmp ecx, 0
     jne medLoop2
-
-
+; -----
+; -----
 ;add eax, dword [edx]
-mov dword [listEstMed], edx
-
+add dword [listEstMed], eax
+; -----
+mov eax, dword [list]
+add dword [listEstMed], eax
+; -----
+mov rbx, list
+mov ecx, dword [length]
+medLoop3:
+    mov eax, dword[rbx]
+    add rbx, 4
+    dec ecx
+    cmp ecx, 0
+    jne medLoop3
+add dword [listEstMed], eax
+; -----
+; -----
+mov eax, dword [listEstMed]
+mov edx, 0
+div dword [DIV4]
+mov dword [listEstMed], eax
+; -----
+; -----
 ; FIND MAX
 mov rbx, list
 mov rcx, 0
 mov eax, dword[rbx]
-
+; -----
 changeMax:
     mov dword [listMax], eax
     jmp Maxloop
-
+; -----
 Maxloop:
     mov eax, dword [rbx + rcx*4]
     inc rcx
@@ -141,7 +166,7 @@ Maxloop:
     jge changeMax
     cmp ecx, dword [length]
     jne Maxloop
-
+; -----
 ; FIND SUM
 mov rbx, list
 mov ecx, dword [length]
@@ -153,22 +178,22 @@ Sumloop:
     cmp ecx, 0
     jne Sumloop
     mov dword [listSum], eax
-
+; -----
 ; FIND AVG
 mov ecx, dword [listSum]
-
+; -----
 mov eax, dword [listSum]
 mov edx, 0
 div dword [length]
 mov dword [listAve], eax
-
-
-
+; -----
+; -----
+; -----
 mov rbx, list
 mov eax, 0
 mov ebx, 0
 mov rsi, 1
-
+; -----
 twelveCount:
     inc dword [twelveCnt]
     mov eax, dword [list - 8 + rsi*4]
@@ -189,8 +214,8 @@ mov rbx, list
 mov eax, 0
 mov ebx, 0
 mov rsi, 1
-
-
+; -----
+; -----
 twelveSumLoop2:
     mov eax, dword[list + rsi * 4]
     mov ebx, 12
@@ -207,7 +232,7 @@ twelveSumm:
     add dword [twelveSum], eax
     inc rsi
     jmp twelveSumLoop2
-
+; -----
 doneTwelveSum:
 ;FIND # DIVISABLE by 12 AVG
 mov ecx, dword [twelveSum]
@@ -215,14 +240,14 @@ mov eax, dword [twelveSum]
 mov edx, 0
 div dword [twelveCnt]
 mov dword [twelveAve], eax
-
-
+; -----
+; -----
 ; FIND NEGATIVE COUNT
 mov rbx, list
 mov eax, 0
 mov ebx, 0
 mov rsi, 1
-
+; -----
 negCount:
     inc dword [negCnt]
     mov eax, dword [list - 8 + rsi*4]
@@ -234,13 +259,13 @@ negSumLoop:
     jl negCount
     cmp esi, dword [length]
     jne negSumLoop
-
-
+; -----
+; -----
 mov rbx, list
 mov eax, 0
 mov ebx, 0
 mov rsi, 1
-
+; -----
 negSumLoop2:
     mov eax, dword[list + rsi * 4]
     cmp eax, 0
@@ -254,7 +279,7 @@ negSumm:
     add dword [negSum], eax
     inc rsi
     jmp negSumLoop2
-
+; -----
 donenegSum:
 ;FIND # DIVISABLE by 12 AVG
 mov ecx, dword [negSum]
@@ -262,12 +287,13 @@ mov eax, dword [negSum]
 cdq
 idiv dword [negCnt]
 mov dword [negAve], eax
-
+; -----
 ; *****************************************************************
 ;	Done, terminate program.
-
+; -----
 last:
 	mov	rax, SYS_exit		; call call for exit (SYS_exit)
 	mov	rdi, EXIT_SUCCESS	; return code of 0 (no error)
 	syscall
-
+; -----
+; -----

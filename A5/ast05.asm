@@ -1,8 +1,8 @@
 ;  Name: Henok Tilahun
 ;  NSHE_ID: 5007740928
 ;  Section: 1002
-;  Assignment: CS 218 – Assignment #2
-;  Description: Practice complex RAM data types and operations 
+;  Assignment: CS 218 – Assignment #5
+;  Description: Practice push and pop operations 
 ;
 
 ; *****************************************************************
@@ -100,11 +100,44 @@ _start:
 ; -----
 ;	YOUR CODE GOES HERE...
 
+mov ecx, dword [length]
+mov rsi, 0
 
+findCalc: ;Does the lateralAreas, totalAreas, and volumes calculations
+    ;lateralAreas[n] = 2 × bases[n] × slants[n]
+    movzx r8d, byte [bases + rsi * 1] ;base[i]
+    movzx r9d, word [slants + rsi * 2] ;slant[i]
+    mov eax, r8d
+    mul dword [ddTwo] ;base[i] * 2
+    mul r9d  ;ans * slant[i]
+    mov dword [lateralAreas + rsi * 4], eax
+    
+    ;totalAreas[n] = bases[n] × (2 × slants[n] + bases[n])
+    movzx r8d, word [slants + rsi * 2] ;slant[i]
+    movzx r9d, byte [bases + rsi * 1] ;base[i]
+    mov eax, r8d
+    mul dword [ddTwo]   ;2 * slant[i]
+    add eax, r9d   ;(2 * slant[i]) + base[i]
+    mul r9d ;ans * base[i]
+    mov dword [totalAreas + rsi * 4], eax
 
+    ;volumes[n] = ((bases[n] × bases[n]) × heights[n]) / 3
+    movzx r8d, byte [bases + rsi * 1] ;base[i]
+    movzx r9d, byte [bases + rsi * 1] ;base[i]
+    mov eax, r8d
+    mul r9d ;base[i] * base[i]
+    mov r8d, dword [heights + rsi * 4] ;height[i]
+    mul r8d ;ans * height[i]
+    mov edx, 0
+    div dword [ddThree] ;ans / 3
+    mov dword [volumes + rsi * 4], eax
 
+    inc rsi ;incrementation
+    cmp rsi, rcx
+    jne findCalc
 
-
+    ; Lateral Area Calculations!!!!!!!!!!!!!!!!!
+    
 
 
 

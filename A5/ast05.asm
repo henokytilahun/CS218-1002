@@ -81,6 +81,8 @@ vAve		dd	0
 ddTwo		dd	2
 ddThree		dd	3
 
+median      dd  0
+
 ; --------------------------------------------------------------
 ; Uninitialized data
 
@@ -137,10 +139,187 @@ findCalc: ;Does the lateralAreas, totalAreas, and volumes calculations
     jne findCalc
 
     ; Lateral Area Calculations!!!!!!!!!!!!!!!!!
-    
+    mov eax, dword [totalAreas]
+    mov dword [taMin], eax
+    mov dword [taMax], eax
+
+    mov eax, dword [lateralAreas]
+    mov dword [laMin], eax
+    mov dword [laMax], eax
+
+    mov eax, dword [volumes]
+    mov dword [vMin], eax
+    mov dword [vMax], eax
+
+    mov dword [taSum], 0
+    mov dword [laSum], 0
+    mov dword [vSum], 0
+
+    mov ecx, dword [length]
+    mov rsi, 0
+
+statsLoop:
+    mov eax, dword [totalAreas + rsi * 4]
+    add dword [taSum], eax
+    cmp eax, dword [taMin]
+    jae notNewTaMin
+    mov dword [taMin], eax
+notNewTaMin:
+    cmp eax, dword [taMax]
+    jbe notNewTaMax
+    mov dword [taMax], eax
+
+notNewTaMax:
+    mov eax, dword [lateralAreas + rsi * 4]
+    add dword [laSum], eax
+    cmp eax, dword [laMin]
+    jae notNewLaMin
+    mov dword [laMin], eax
+
+notNewLaMin:
+    cmp eax, dword [laMax]
+    jbe notNewLaMax
+    mov dword [laMax], eax
+
+notNewLaMax:
+    mov eax, dword [volumes + rsi * 4]
+    add dword [vSum], eax
+    cmp eax, dword [vMin]
+    jae notNewVMin
+    mov dword [vMin], eax
+
+notNewVMin:
+    cmp eax, dword [vMax]
+    jbe notNewVMax
+    mov dword [vMax], eax
+
+notNewVMax:
+    inc rsi
+    cmp rsi, rcx
+    jne statsLoop
 
 
+    ;Calculating the average of the lateralAreas, totalAreas, and volumes
+    mov eax, dword [taSum]
+    cdq
+    idiv ecx
+    mov dword [taAve], eax
 
+    mov eax, dword [laSum]
+    cdq
+    idiv ecx
+    mov dword [laAve], eax
+
+    mov eax, dword [vSum]
+    cdq
+    idiv ecx
+    mov dword [vAve], eax
+
+
+;Caculating the Estmedian of the lateralAreas
+
+
+mov eax, dword[length]
+mov edx, 0
+div dword [ddTwo]
+mov dword [median], eax
+add dword [median], 1
+; -----
+mov ecx, dword [median]
+; -----
+mov rbx, lateralAreas
+; -----
+lamedLoop1:
+    mov eax, dword[rbx]
+    add rbx, 4
+    dec ecx
+    cmp ecx, 0
+    jne lamedLoop1
+add dword [laEstMed], eax
+
+mov eax, dword [lateralAreas]
+add dword [laEstMed], eax
+; -----
+mov rbx, lateralAreas
+mov ecx, dword [length]
+lamedLoop3:
+    mov eax, dword[rbx]
+    add rbx, 4
+    dec ecx
+    cmp ecx, 0
+    jne lamedLoop3
+add dword [laEstMed], eax
+; -----
+; -----
+mov eax, dword [laEstMed]
+mov edx, 0
+div dword [ddThree]
+mov dword [laEstMed], eax
+
+
+; Calculating the Estmedian of the totalAreas
+mov ecx, dword [median]
+; -----
+mov rbx, totalAreas
+; -----
+tamedLoop1:
+    mov eax, dword[rbx]
+    add rbx, 4
+    dec ecx
+    cmp ecx, 0
+    jne tamedLoop1
+add dword [taEstMed], eax
+
+mov eax, dword [totalAreas]
+add dword [taEstMed], eax
+; -----
+mov rbx, totalAreas
+mov ecx, dword [length]
+tamedLoop3:
+    mov eax, dword[rbx]
+    add rbx, 4
+    dec ecx
+    cmp ecx, 0
+    jne tamedLoop3
+add dword [taEstMed], eax
+; -----
+; -----
+mov eax, dword [taEstMed]
+mov edx, 0
+div dword [ddThree]
+mov dword [taEstMed], eax
+
+; Calculating the Estmedian of the volumes
+mov ecx, dword [median]
+; -----
+mov rbx, volumes
+; -----
+vmedLoop1:
+    mov eax, dword[rbx]
+    add rbx, 4
+    dec ecx
+    cmp ecx, 0
+    jne vmedLoop1
+add dword [vEstMed], eax
+
+mov eax, dword [volumes]
+add dword [vEstMed], eax
+; -----
+mov rbx, volumes
+mov ecx, dword [length]
+vmedLoop3:
+    mov eax, dword[rbx]
+    add rbx, 4
+    dec ecx
+    cmp ecx, 0
+    jne vmedLoop3
+add dword [vEstMed], eax
+; -----
+; -----
+mov eax, dword [vEstMed]
+mov edx, 0
+div dword [ddThree]
+mov dword [vEstMed], eax
 
 ; *****************************************************************
 ;	Done, terminate program.

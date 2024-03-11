@@ -188,11 +188,15 @@ getParams:
 
     ;check if arc = 1   errUsage
 	cmp edi, 1
-	jne errUsagee
+	je errUsagee
 
     ;check if there are 11 arguments    errBadCL
+    ; > 11
 	cmp edi, 11
-	jne errBadCLe
+	jb errBadCLe
+    ; < 11
+    cmp edi, 11
+	ja errBadCLe
 
     ;check if argv[1] is -r1    errR1sp
     mov rbx, qword [rsi +8]
@@ -342,51 +346,51 @@ jmp donee
 
 errUsagee:
     mov rdi, errUsage
-    call printIt
+    jmp printIt
 
 errR1spe:
 	mov rdi, errR1sp
-	call printIt
+	jmp printIt
 
 errR1valuee:
 	mov rdi, errR1value
-	call printIt
+	jmp printIt
 
 errR2spe:
 	mov rdi, errR2sp
-	call printIt
+	jmp printIt
 
 errR2valuee:
 	mov rdi, errR2value
-	call printIt
+	jmp printIt
 
 errHspe:
 	mov rdi, errHsp
-	call printIt
+	jmp printIt
 
 errHvaluee:
 	mov rdi, errHvalue
-	call printIt
+	jmp printIt
 
 errWspe:
 	mov rdi, errWsp
-	call printIt
+	jmp printIt
 
 errWvaluee:
 	mov rdi, errWvalue
-	call printIt
+	jmp printIt
 
 errCLspe:
 	mov rdi, errCLsp
-	call printIt
+	jmp printIt
 
 errCLvaluee:
 	mov rdi, errCLvalue
-	call printIt
+	jmp printIt
 
 errBadCLe:
     mov rdi, errBadCL
-    call printIt
+    jmp printIt
 
 printIt:
 	call printString
@@ -399,7 +403,7 @@ printIt:
 donee:
 
     pop r12
-    ret
+ret
 
 
 
@@ -451,7 +455,7 @@ doneee:
 	pop r13
 	pop r12
 
-    ret
+ret
 
 
 
@@ -621,6 +625,5 @@ prtDone:
 	ret
 
 ; ******************************************************************
-
 
 
